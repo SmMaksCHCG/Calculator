@@ -1,0 +1,22 @@
+@startuml
+title Диаграмма классов Simple Calculator
+
+class MainWindow {
+  - double _accumulator
+  - string _currentOperator
+  - bool _isEnteringNumber
+  - bool _justCalculated
+  + void Digit_Click(object, RoutedEventArgs)
+  + void Operator_Click(object, RoutedEventArgs)
+  + void Equals_Click(object, RoutedEventArgs)
+  + void Clear_Click(object, RoutedEventArgs)
+}
+
+class HistoryEntry {
+  + string Expression
+  + double Result
+}
+
+MainWindow "1" -- "*" HistoryEntry : uses >
+
+@enduml
