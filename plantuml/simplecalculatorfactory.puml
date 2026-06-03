@@ -1,0 +1,180 @@
+@startuml SimpleCalculatorFactory
+title SimpleCalculatorFactory - Class Diagram
+
+abstract class Button {
+  +Press(): string
+}
+
+class DigitButton {
+  -_digit: int
+  +DigitButton(digit: int)
+  +Press(): string
+}
+
+class OperatorButton {
+  -_operation: string
+  +OperatorButton(op: string)
+  +Press(): string
+}
+
+class EqualsButton {
+  +Press(): string
+}
+
+class ClearButton {
+  +Press(): string
+}
+
+class ClearEntryButton {
+  +Press(): string
+}
+
+class PercentButton {
+  +Press(): string
+}
+
+class PlusMinusButton {
+  +Press(): string
+}
+
+class SqrtButton {
+  +Press(): string
+}
+
+class PowerButton {
+  -_power: double
+  +PowerButton(power: double)
+  +Press(): string
+}
+
+class LogButton {
+  +Press(): string
+}
+
+class SinButton {
+  +Press(): string
+}
+
+class CosButton {
+  +Press(): string
+}
+
+class MemoryStoreButton {
+  +Press(): string
+}
+
+class MemoryRecallButton {
+  +Press(): string
+}
+
+Button <|-- DigitButton
+Button <|-- OperatorButton
+Button <|-- EqualsButton
+Button <|-- ClearButton
+Button <|-- ClearEntryButton
+Button <|-- PercentButton
+Button <|-- PlusMinusButton
+Button <|-- SqrtButton
+Button <|-- PowerButton
+Button <|-- LogButton
+Button <|-- SinButton
+Button <|-- CosButton
+Button <|-- MemoryStoreButton
+Button <|-- MemoryRecallButton
+
+abstract class ButtonCreator {
+  +Create(): Button
+}
+
+class DigitButtonCreator {
+  -_digit: int
+  +DigitButtonCreator(digit: int)
+  +Create(): Button
+}
+
+class OperatorButtonCreator {
+  -_op: string
+  +OperatorButtonCreator(op: string)
+  +Create(): Button
+}
+
+class EqualsButtonCreator {
+  +Create(): Button
+}
+
+class ClearButtonCreator {
+  +Create(): Button
+}
+
+class ClearEntryButtonCreator {
+  +Create(): Button
+}
+
+class PercentButtonCreator {
+  +Create(): Button
+}
+
+class PlusMinusButtonCreator {
+  +Create(): Button
+}
+
+class SqrtButtonCreator {
+  +Create(): Button
+}
+
+class PowerButtonCreator {
+  -_power: double
+  +PowerButtonCreator(power: double)
+  +Create(): Button
+}
+
+class LogButtonCreator {
+  +Create(): Button
+}
+
+class SinButtonCreator {
+  +Create(): Button
+}
+
+class CosButtonCreator {
+  +Create(): Button
+}
+
+class MemoryStoreButtonCreator {
+  +Create(): Button
+}
+
+class MemoryRecallButtonCreator {
+  +Create(): Button
+}
+
+ButtonCreator <|-- DigitButtonCreator
+ButtonCreator <|-- OperatorButtonCreator
+ButtonCreator <|-- EqualsButtonCreator
+ButtonCreator <|-- ClearButtonCreator
+ButtonCreator <|-- ClearEntryButtonCreator
+ButtonCreator <|-- PercentButtonCreator
+ButtonCreator <|-- PlusMinusButtonCreator
+ButtonCreator <|-- SqrtButtonCreator
+ButtonCreator <|-- PowerButtonCreator
+ButtonCreator <|-- LogButtonCreator
+ButtonCreator <|-- SinButtonCreator
+ButtonCreator <|-- CosButtonCreator
+ButtonCreator <|-- MemoryStoreButtonCreator
+ButtonCreator <|-- MemoryRecallButtonCreator
+
+class CalculatorEngine {
+  -_left: double?
+  -_op: string?
+  -_memory: double?
+  +EnterNumber(token: string)
+  +EnterOperator(op: string)
+  +Compute(right: double): double
+  +ApplyUnary(op: string, value: double): double
+  +MemoryStore(value: double)
+  +MemoryRecall(): double?
+}
+
+CalculatorEngine ..> Button : uses
+
+@enduml
