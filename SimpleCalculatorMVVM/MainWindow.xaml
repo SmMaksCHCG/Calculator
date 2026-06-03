@@ -1,0 +1,54 @@
+<Window x:Class="Calculator.SimpleCalculatorMVVM.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Calculator.SimpleCalculatorMVVM"
+        mc:Ignorable="d"
+        Title="SimpleCalculator MVVM" Height="450" Width="300">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBox Text="{Binding Display}" FontSize="24" IsReadOnly="True" HorizontalAlignment="Stretch" />
+        <StackPanel Grid.Row="1" Margin="0,10,0,0">
+            <UniformGrid Columns="6" Rows="1" Margin="0,0,0,6">
+                <Button Content="%" Command="{Binding UnaryCommand}" CommandParameter="%" />
+                <Button Content="√" Command="{Binding UnaryCommand}" CommandParameter="sqrt" />
+                <Button Content="±" Command="{Binding UnaryCommand}" CommandParameter="±" />
+                <Button Content="CE" Command="{Binding ClearCommand}" />
+                <Button Content="^" Command="{Binding UnaryCommand}" CommandParameter="^" />
+                <Button Content="log" Command="{Binding UnaryCommand}" CommandParameter="log" />
+            </UniformGrid>
+            <UniformGrid Columns="4" Rows="4">
+            <!-- Digits and operators -->
+            <Button Content="7" Command="{Binding DigitCommand}" CommandParameter="7" />
+            <Button Content="8" Command="{Binding DigitCommand}" CommandParameter="8" />
+            <Button Content="9" Command="{Binding DigitCommand}" CommandParameter="9" />
+            <Button Content="/" Command="{Binding OperatorCommand}" CommandParameter="/" />
+
+            <Button Content="4" Command="{Binding DigitCommand}" CommandParameter="4" />
+            <Button Content="5" Command="{Binding DigitCommand}" CommandParameter="5" />
+            <Button Content="6" Command="{Binding DigitCommand}" CommandParameter="6" />
+            <Button Content="*" Command="{Binding OperatorCommand}" CommandParameter="*" />
+
+            <Button Content="1" Command="{Binding DigitCommand}" CommandParameter="1" />
+            <Button Content="2" Command="{Binding DigitCommand}" CommandParameter="2" />
+            <Button Content="3" Command="{Binding DigitCommand}" CommandParameter="3" />
+            <Button Content="-" Command="{Binding OperatorCommand}" CommandParameter="-" />
+
+                <Button Content="0" Command="{Binding DigitCommand}" CommandParameter="0" />
+                <Button Content="C" Command="{Binding ClearCommand}" />
+                <Button Content="=" Command="{Binding EqualsCommand}" />
+                <Button Content="+" Command="{Binding OperatorCommand}" CommandParameter="+" />
+            </UniformGrid>
+            <UniformGrid Columns="4" Rows="1" Margin="0,6,0,0">
+                <Button Content="MS" Command="{Binding MemoryStoreCommand}" />
+                <Button Content="MR" Command="{Binding MemoryRecallCommand}" />
+                <Button Content="sin" Command="{Binding UnaryCommand}" CommandParameter="sin" />
+                <Button Content="cos" Command="{Binding UnaryCommand}" CommandParameter="cos" />
+            </UniformGrid>
+        </StackPanel>
+    </Grid>
+</Window>

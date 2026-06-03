@@ -15,7 +15,10 @@ class MainViewModel {
   +DigitCommand: RelayCommand
   +OperatorCommand: RelayCommand
   +EqualsCommand: RelayCommand
-  +ClearCommand: RelayCommand
+	+ClearCommand: RelayCommand
+  +UnaryCommand: RelayCommand
+  +MemoryStoreCommand: RelayCommand
+  +MemoryRecallCommand: RelayCommand
 }
 
 class RelayCommand {
