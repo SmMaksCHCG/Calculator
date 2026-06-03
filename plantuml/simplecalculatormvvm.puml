@@ -1,0 +1,29 @@
+@startuml SimpleCalculatorMVVM
+title SimpleCalculatorMVVM - Class Diagram
+
+class CalculatorModel {
+  +Add(a: double, b: double): double
+  +Subtract(a: double, b: double): double
+  +Multiply(a: double, b: double): double
+  +Divide(a: double, b: double): double
+}
+
+class MainViewModel {
+  -_model: CalculatorModel
+  -_display: string
+  +Display: string
+  +DigitCommand: RelayCommand
+  +OperatorCommand: RelayCommand
+  +EqualsCommand: RelayCommand
+  +ClearCommand: RelayCommand
+}
+
+class RelayCommand {
+  +CanExecute(param: object?): bool
+  +Execute(param: object?)
+}
+
+MainViewModel ..> CalculatorModel : uses
+MainViewModel ..> RelayCommand : composes
+
+@enduml
