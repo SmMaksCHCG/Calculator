@@ -1,8 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <!-- Static image resource -->
-    <BitmapImage x:Key="AppIcon" UriSource="pack://application:,,,/SimpleCalculatorMVVM;component/Resources/Icons/appicon.png" />
+    <!-- Static image resource (loaded from external URL provided by user) -->
+    <BitmapImage x:Key="AppIcon" UriSource="https://icon-icons.com/icon/calculator/131160?utm_source=chatgpt.com" />
 
     <!-- Cursor resource (dynamic load possible) -->
     <Cursor x:Key="HandCursor">pack://application:,,,/SimpleCalculatorMVVM;component/Resources/Cursors/hand.cur</Cursor>

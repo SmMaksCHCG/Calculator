@@ -7,5 +7,10 @@
 	<Nullable>enable</Nullable>
 	<ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+  <ItemGroup>
+	<ProjectReference Include="..\libs\EvaluationLib\EvaluationLib.csproj" />
+	<ProjectReference Include="..\libs\MemoryLib\MemoryLib.csproj" />
+	<ProjectReference Include="..\libs\InfoLib\InfoLib.csproj" />
+  </ItemGroup>
 
 </Project>

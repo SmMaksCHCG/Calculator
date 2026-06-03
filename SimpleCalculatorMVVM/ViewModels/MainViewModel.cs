@@ -9,6 +9,10 @@ public class MainViewModel : INotifyPropertyChanged
     private readonly CalculatorModel _model = new();
     private readonly Commands.CommandInvoker _invoker = new();
     private readonly Interfaces.ICalculator _calculator;
+    // services used by the VM
+    private readonly Calculator.EvaluationLib.ExpressionEvaluator _evaluator;
+    private readonly Calculator.MemoryLib.MemoryService _memoryService;
+    private readonly Calculator.InfoLib.InfoService _infoService;
     private string _display = "0";
     public string Display { get => _display; set { _display = value; OnPropertyChanged(); } }
 
@@ -30,14 +34,19 @@ public class MainViewModel : INotifyPropertyChanged
         var adapter = new Adapters.CalculatorAdapter(_model);
         var proxy = new Proxies.CachingCalculatorProxy(adapter);
         _calculator = new Decorators.LoggingCalculatorDecorator(proxy);
+        // services
+        _evaluator = new Calculator.EvaluationLib.ExpressionEvaluator();
+        _memoryService = new Calculator.MemoryLib.MemoryService();
+        _infoService = new Calculator.InfoLib.InfoService();
 
         DigitCommand = new RelayCommand(p => EnterDigit(p?.ToString()));
         OperatorCommand = new RelayCommand(p => { var s = p?.ToString(); if (s == "^") ApplyUnary(s); else EnterOperator(s); });
         EqualsCommand = new RelayCommand(_ => Compute());
         ClearCommand = new RelayCommand(_ => { Display = "0"; _left = null; _op = null; });
         UnaryCommand = new RelayCommand(p => ApplyUnary(p?.ToString()));
-        MemoryStoreCommand = new RelayCommand(_ => _memory = double.Parse(Display, System.Globalization.CultureInfo.InvariantCulture));
-        MemoryRecallCommand = new RelayCommand(_ => { if (_memory.HasValue) Display = _memory.Value.ToString(System.Globalization.CultureInfo.InvariantCulture); });
+        MemoryStoreCommand = new RelayCommand(_ => _memoryService.Store(double.Parse(Display, System.Globalization.CultureInfo.InvariantCulture)));
+        MemoryRecallCommand = new RelayCommand(_ => { var m = _memoryService.Recall(); if (m.HasValue) Display = m.Value.ToString(System.Globalization.CultureInfo.InvariantCulture); });
+        UndoCommand = new RelayCommand(_ => { var u = _invoker.Undo(); if (u.HasValue) Display = u.Value.ToString(System.Globalization.CultureInfo.InvariantCulture); });
     }
 
     private void EnterDigit(string? d)
