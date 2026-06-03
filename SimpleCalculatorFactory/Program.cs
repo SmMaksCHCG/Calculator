@@ -2,55 +2,66 @@ using System;
 using Calculator.SimpleCalculatorFactory.Buttons;
 using Calculator.SimpleCalculatorFactory.Factories;
 
-Console.WriteLine("SimpleCalculatorFactory demo (Factory Method)");
+Console.WriteLine("SimpleCalculatorFactory interactive demo (Factory Method)");
 
-// Демонстрация: собираем выражение 12 + 3 =
-var creators = new ButtonCreator[] {
-    new DigitButtonCreator(1), new DigitButtonCreator(2),
-    new OperatorButtonCreator("+"),
-    new DigitButtonCreator(3), new EqualsButtonCreator()
-};
-
-var inputTokens = new System.Collections.Generic.List<string>();
-foreach (var c in creators)
+var engine = new CalculatorEngine();
+Console.WriteLine("Команды: число, + - * /, =, C, CE, %, ±, sqrt, ^, log, sin, cos, MS, MR, exit");
+string? input;
+string? pendingOp = null;
+double current = 0;
+while (true)
 {
-    var btn = c.Create();
-    var tok = btn.Press();
-    Console.Write(tok + " ");
-    inputTokens.Add(tok);
-}
-Console.WriteLine();
-
-// Простая логика парсинга демонстрации
-try
-{
-    // собрать число из последовательных цифр
-    var tokens = inputTokens;
-    double? left = null;
-    string? op = null;
-    double? right = null;
-    string currentNumber = "";
-    foreach (var t in tokens)
+    Console.Write("> ");
+    input = Console.ReadLine();
+    if (input == null) break;
+    var token = input.Trim();
+    if (token.Equals("exit", StringComparison.OrdinalIgnoreCase)) break;
+    try
     {
-        if (int.TryParse(t, out _)) { currentNumber += t; continue; }
-        if (t == "+" || t == "-" || t == "*" || t == "/")
+        // числа
+        if (double.TryParse(token, out var num))
         {
-            if (currentNumber != "") { left = double.Parse(currentNumber); currentNumber = ""; }
-            op = t; continue;
+            current = num;
+            Console.WriteLine($"Ввод: {current}");
+            continue;
         }
-        if (t == "=") { if (currentNumber != "") right = double.Parse(currentNumber); }
+
+        // бинарные операции
+        if (token == "+" || token == "-" || token == "*" || token == "/")
+        {
+            engine.EnterNumber(current.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            engine.EnterOperator(token);
+            Console.WriteLine($"Операция: {token}");
+            continue;
+        }
+
+        if (token == "=")
+        {
+            var res = engine.Compute(current);
+            Console.WriteLine($"= {res}");
+            current = res;
+            continue;
+        }
+
+        // функциональные
+        if (token.Equals("C", StringComparison.OrdinalIgnoreCase)) { current = 0; Console.WriteLine("Cleared"); continue; }
+        if (token.Equals("CE", StringComparison.OrdinalIgnoreCase)) { current = 0; Console.WriteLine("Cleared entry"); continue; }
+        if (token == "%") { current = engine.ApplyUnary("%", current); Console.WriteLine(current); continue; }
+        if (token == "±") { current = engine.ApplyUnary("±", current); Console.WriteLine(current); continue; }
+        if (token.Equals("sqrt", StringComparison.OrdinalIgnoreCase) || token == "√") { current = engine.ApplyUnary("√", current); Console.WriteLine(current); continue; }
+        if (token == "^") { current = engine.ApplyUnary("^", current); Console.WriteLine(current); continue; }
+        if (token.Equals("log", StringComparison.OrdinalIgnoreCase)) { current = engine.ApplyUnary("log", current); Console.WriteLine(current); continue; }
+        if (token.Equals("sin", StringComparison.OrdinalIgnoreCase)) { current = engine.ApplyUnary("sin", current); Console.WriteLine(current); continue; }
+        if (token.Equals("cos", StringComparison.OrdinalIgnoreCase)) { current = engine.ApplyUnary("cos", current); Console.WriteLine(current); continue; }
+
+        // память
+        if (token.Equals("MS", StringComparison.OrdinalIgnoreCase)) { engine.MemoryStore(current); Console.WriteLine("Stored to memory"); continue; }
+        if (token.Equals("MR", StringComparison.OrdinalIgnoreCase)) { var m = engine.MemoryRecall(); Console.WriteLine(m.HasValue ? m.Value.ToString() : "(empty)"); if (m.HasValue) current = m.Value; continue; }
+
+        Console.WriteLine("Неизвестная команда");
     }
-    if (left.HasValue && op != null && right.HasValue)
+    catch (Exception ex)
     {
-        var engine = new CalculatorEngine();
-        engine.EnterNumber(left.Value.ToString(System.Globalization.CultureInfo.InvariantCulture));
-        engine.EnterOperator(op);
-        var result = engine.Compute(right.Value);
-        Console.WriteLine($"Результат: {result}");
-    }
-    else
-    {
-        Console.WriteLine("Не удалось распознать выражение.");
+        Console.WriteLine($"Ошибка: {ex.Message}");
     }
 }
-catch (Exception ex) { Console.WriteLine($"Ошибка: {ex.Message}"); }
