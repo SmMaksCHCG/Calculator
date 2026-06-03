@@ -19,6 +19,9 @@ public class AppConfig
     // Accessibility presets: normal, large
     public string? Accessibility { get; set; }
 
+    // Preset styles: kids, elderly, high-contrast
+    public string? Preset { get; set; }
+
     // Optional DB connection string
     public string? ConnectionString { get; set; }
 }
