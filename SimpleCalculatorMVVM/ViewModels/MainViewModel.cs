@@ -66,11 +66,35 @@ public class MainViewModel : INotifyPropertyChanged
     private void Compute()
     {
         if (!_left.HasValue || _op == null) return;
-        var right = double.Parse(Display, System.Globalization.CultureInfo.InvariantCulture);
+        double right;
+        if (!double.TryParse(Display, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out right))
+        {
+            Display = "Error";
+            _left = null; _op = null;
+            return;
+        }
         var cmd = new Commands.BinaryCommand(_model, _left.Value, right, _op);
-        var res = _invoker.ExecuteCommand(cmd);
-        Display = res.ToString(System.Globalization.CultureInfo.InvariantCulture);
-        _left = null; _op = null;
+        try
+        {
+            var res = _invoker.ExecuteCommand(cmd);
+            Display = res.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        }
+        catch (System.DivideByZeroException)
+        {
+            Display = "Error: ÷0";
+        }
+        catch (System.InvalidOperationException)
+        {
+            Display = "Error";
+        }
+        catch (System.Exception)
+        {
+            Display = "Error";
+        }
+        finally
+        {
+            _left = null; _op = null;
+        }
     }
 
     private double? _memory;
@@ -79,18 +103,29 @@ public class MainViewModel : INotifyPropertyChanged
     {
         if (string.IsNullOrEmpty(op)) return;
         var val = double.Parse(Display, System.Globalization.CultureInfo.InvariantCulture);
-        var res = op switch
+        try
         {
-            "%" => _model.Percent(val),
-            "±" => _model.Negate(val),
-            "√" or "sqrt" => _model.Sqrt(val),
-            "^" => _model.Power(val),
-            "log" => _model.Log10(val),
-            "sin" => _model.Sin(val),
-            "cos" => _model.Cos(val),
-            _ => val
-        };
-        Display = res.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            var res = op switch
+            {
+                "%" => _model.Percent(val),
+                "±" => _model.Negate(val),
+                "√" or "sqrt" => _model.Sqrt(val),
+                "^" => _model.Power(val),
+                "log" => _model.Log10(val),
+                "sin" => _model.Sin(val),
+                "cos" => _model.Cos(val),
+                _ => val
+            };
+            Display = res.ToString(System.Globalization.CultureInfo.InvariantCulture);
+        }
+        catch (System.InvalidOperationException)
+        {
+            Display = "Error";
+        }
+        catch (System.Exception)
+        {
+            Display = "Error";
+        }
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
