@@ -1,0 +1,12 @@
+<Window x:Class="Calculator.SimpleCalculatorMVVM.AboutWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="About" Height="200" Width="300">
+    <StackPanel Margin="10">
+        <TextBlock Text="Simple Calculator MVVM" FontWeight="Bold" FontSize="16" />
+        <TextBlock Text="Version 1.0" />
+        <TextBlock Text="Author: Student" />
+        <Button Name="btnPlay" Content="Play Sound" Margin="0,10,0,0" Click="BtnPlay_Click" />
+        <Button Name="btnClose" Content="Close" Click="BtnClose_Click" />
+    </StackPanel>
+</Window>
