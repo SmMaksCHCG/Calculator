@@ -48,6 +48,7 @@
                 <Button Content="MR" Command="{Binding MemoryRecallCommand}" />
                 <Button Content="sin" Command="{Binding UnaryCommand}" CommandParameter="sin" />
                 <Button Content="cos" Command="{Binding UnaryCommand}" CommandParameter="cos" />
+                <Button Content="Undo" Command="{Binding UndoCommand}" />
             </UniformGrid>
         </StackPanel>
     </Grid>
