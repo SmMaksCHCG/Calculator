@@ -8,6 +8,7 @@ public class MainViewModel : INotifyPropertyChanged
 {
     private readonly CalculatorModel _model = new();
     private readonly Commands.CommandInvoker _invoker = new();
+    private readonly Interfaces.ICalculator _calculator;
     private string _display = "0";
     public string Display { get => _display; set { _display = value; OnPropertyChanged(); } }
 
@@ -25,6 +26,11 @@ public class MainViewModel : INotifyPropertyChanged
 
     public MainViewModel()
     {
+        // build calculator pipeline: Adapter -> Proxy -> LoggingDecorator
+        var adapter = new Adapters.CalculatorAdapter(_model);
+        var proxy = new Proxies.CachingCalculatorProxy(adapter);
+        _calculator = new Decorators.LoggingCalculatorDecorator(proxy);
+
         DigitCommand = new RelayCommand(p => EnterDigit(p?.ToString()));
         OperatorCommand = new RelayCommand(p => { var s = p?.ToString(); if (s == "^") ApplyUnary(s); else EnterOperator(s); });
         EqualsCommand = new RelayCommand(_ => Compute());
